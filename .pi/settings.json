@@ -1,0 +1,15 @@
+{
+  "extensions": [
+    "./extensions/hsk-vocab.ts",
+    "./extensions/mistake-book.ts",
+    "./extensions/fsrs-scheduler.ts",
+    "./extensions/student-profile.ts",
+    "./extensions/tavus-bridge.ts"
+  ],
+  "skills": [
+    "./skills/zh-dialogue"
+  ],
+  "prompts": [
+    "./prompts/tutor-persona.md"
+  ]
+}

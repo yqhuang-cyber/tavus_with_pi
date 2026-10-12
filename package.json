@@ -23,7 +23,8 @@
   "dependencies": {
     "@mariozechner/pi-coding-agent": "*",
     "better-sqlite3": "^11.5.0",
-    "ts-fsrs": "^1.0.0"
+    "ts-fsrs": "^1.0.0",
+    "tavus-mcp": "file:./vendor/tavus-mcp"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.0",

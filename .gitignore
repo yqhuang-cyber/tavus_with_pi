@@ -7,10 +7,14 @@ dist/
 build/
 *.tsbuildinfo
 
+# 但 vendor/tavus-mcp 的 build 必须 commit（不依赖 node_modules）
+!vendor/**/build/
+
 # Pi 扩展运行时产物
 *.js
 *.js.map
 !scripts/**/*.js
+!vendor/**/*.js
 
 # 数据
 *.db

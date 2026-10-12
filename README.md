@@ -96,6 +96,7 @@ pi
 ## 核心文档
 
 📄 **[PRD.md](./PRD.md)** — 产品需求（v1.0）
+✅ **[docs/tasks.md](./docs/tasks.md)** — **开发 tasking（30 个 task，按周排）**
 📐 **[ARCHITECTURE.md](./ARCHITECTURE.md)** — 完整技术架构
 🗺️ **[docs/implementation-roadmap.md](./docs/implementation-roadmap.md)** — 12 周实施计划
 🤖 **[docs/tavus-pal-prompt.md](./docs/tavus-pal-prompt.md)** — Tavus PAL system_prompt 模板

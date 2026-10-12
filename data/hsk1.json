@@ -1,0 +1,786 @@
+[
+  {
+    "word": "你好",
+    "pinyin": "nǐ hǎo",
+    "hsk_level": 1,
+    "part_of_speech": "phrase",
+    "meaning_en": "hello",
+    "meaning_zh": "你好",
+    "examples": [
+      {
+        "zh": "你好，很高兴认识你。",
+        "pinyin": "nǐ hǎo, hěn gāoxìng rènshi nǐ",
+        "en": "Hello, nice to meet you."
+      }
+    ],
+    "frequency_rank": 1
+  },
+  {
+    "word": "谢谢",
+    "pinyin": "xiè xie",
+    "hsk_level": 1,
+    "part_of_speech": "phrase",
+    "meaning_en": "thank you",
+    "meaning_zh": "谢谢",
+    "examples": [
+      {
+        "zh": "谢谢你帮我。",
+        "pinyin": "xiè xie nǐ bāng wǒ",
+        "en": "Thank you for helping me."
+      }
+    ],
+    "frequency_rank": 2
+  },
+  {
+    "word": "再见",
+    "pinyin": "zài jiàn",
+    "hsk_level": 1,
+    "part_of_speech": "phrase",
+    "meaning_en": "goodbye",
+    "meaning_zh": "再见",
+    "examples": [
+      {
+        "zh": "再见，明天见。",
+        "pinyin": "zài jiàn, míngtiān jiàn",
+        "en": "Goodbye, see you tomorrow."
+      }
+    ],
+    "frequency_rank": 3
+  },
+  {
+    "word": "我",
+    "pinyin": "wǒ",
+    "hsk_level": 1,
+    "part_of_speech": "pron",
+    "meaning_en": "I; me",
+    "meaning_zh": "我",
+    "examples": [
+      {
+        "zh": "我是学生。",
+        "pinyin": "wǒ shì xuésheng",
+        "en": "I am a student."
+      }
+    ],
+    "frequency_rank": 4
+  },
+  {
+    "word": "你",
+    "pinyin": "nǐ",
+    "hsk_level": 1,
+    "part_of_speech": "pron",
+    "meaning_en": "you",
+    "meaning_zh": "你",
+    "examples": [
+      {
+        "zh": "你是老师吗？",
+        "pinyin": "nǐ shì lǎoshī ma",
+        "en": "Are you a teacher?"
+      }
+    ],
+    "frequency_rank": 5
+  },
+  {
+    "word": "他",
+    "pinyin": "tā",
+    "hsk_level": 1,
+    "part_of_speech": "pron",
+    "meaning_en": "he; him",
+    "meaning_zh": "他",
+    "examples": [
+      {
+        "zh": "他是我的朋友。",
+        "pinyin": "tā shì wǒ de péngyou",
+        "en": "He is my friend."
+      }
+    ],
+    "frequency_rank": 6
+  },
+  {
+    "word": "她",
+    "pinyin": "tā",
+    "hsk_level": 1,
+    "part_of_speech": "pron",
+    "meaning_en": "she; her",
+    "meaning_zh": "她",
+    "examples": [
+      {
+        "zh": "她是我的姐姐。",
+        "pinyin": "tā shì wǒ de jiějie",
+        "en": "She is my older sister."
+      }
+    ],
+    "frequency_rank": 7
+  },
+  {
+    "word": "的",
+    "pinyin": "de",
+    "hsk_level": 1,
+    "part_of_speech": "particle",
+    "meaning_en": "possessive particle",
+    "meaning_zh": "的",
+    "examples": [
+      {
+        "zh": "这是我的书。",
+        "pinyin": "zhè shì wǒ de shū",
+        "en": "This is my book."
+      }
+    ],
+    "frequency_rank": 8
+  },
+  {
+    "word": "是",
+    "pinyin": "shì",
+    "hsk_level": 1,
+    "part_of_speech": "v",
+    "meaning_en": "to be",
+    "meaning_zh": "是",
+    "examples": [
+      {
+        "zh": "我是一个学生。",
+        "pinyin": "wǒ shì yí ge xuésheng",
+        "en": "I am a student."
+      }
+    ],
+    "frequency_rank": 9
+  },
+  {
+    "word": "不",
+    "pinyin": "bù",
+    "hsk_level": 1,
+    "part_of_speech": "adv",
+    "meaning_en": "no; not",
+    "meaning_zh": "不",
+    "examples": [
+      {
+        "zh": "我不是老师。",
+        "pinyin": "wǒ bú shì lǎoshī",
+        "en": "I am not a teacher."
+      }
+    ],
+    "frequency_rank": 10
+  },
+  {
+    "word": "有",
+    "pinyin": "yǒu",
+    "hsk_level": 1,
+    "part_of_speech": "v",
+    "meaning_en": "to have",
+    "meaning_zh": "有",
+    "examples": [
+      {
+        "zh": "我有一只狗。",
+        "pinyin": "wǒ yǒu yì zhī gǒu",
+        "en": "I have a dog."
+      }
+    ],
+    "frequency_rank": 11
+  },
+  {
+    "word": "没有",
+    "pinyin": "méi yǒu",
+    "hsk_level": 1,
+    "part_of_speech": "v",
+    "meaning_en": "to not have; there isn't",
+    "meaning_zh": "没有",
+    "examples": [
+      {
+        "zh": "我没有时间。",
+        "pinyin": "wǒ méi yǒu shíjiān",
+        "en": "I don't have time."
+      }
+    ],
+    "frequency_rank": 12
+  },
+  {
+    "word": "喜欢",
+    "pinyin": "xǐ huan",
+    "hsk_level": 1,
+    "part_of_speech": "v",
+    "meaning_en": "to like",
+    "meaning_zh": "喜欢",
+    "examples": [
+      {
+        "zh": "我喜欢狗。",
+        "pinyin": "wǒ xǐ huan gǒu",
+        "en": "I like dogs."
+      }
+    ],
+    "frequency_rank": 13
+  },
+  {
+    "word": "想",
+    "pinyin": "xiǎng",
+    "hsk_level": 1,
+    "part_of_speech": "v",
+    "meaning_en": "to want; to think",
+    "meaning_zh": "想",
+    "examples": [
+      {
+        "zh": "我想去中国。",
+        "pinyin": "wǒ xiǎng qù zhōngguó",
+        "en": "I want to go to China."
+      }
+    ],
+    "frequency_rank": 14
+  },
+  {
+    "word": "去",
+    "pinyin": "qù",
+    "hsk_level": 1,
+    "part_of_speech": "v",
+    "meaning_en": "to go",
+    "meaning_zh": "去",
+    "examples": [
+      {
+        "zh": "我去学校。",
+        "pinyin": "wǒ qù xuéxiào",
+        "en": "I go to school."
+      }
+    ],
+    "frequency_rank": 15
+  },
+  {
+    "word": "来",
+    "pinyin": "lái",
+    "hsk_level": 1,
+    "part_of_speech": "v",
+    "meaning_en": "to come",
+    "meaning_zh": "来",
+    "examples": [
+      {
+        "zh": "请来我家。",
+        "pinyin": "qǐng lái wǒ jiā",
+        "en": "Please come to my home."
+      }
+    ],
+    "frequency_rank": 16
+  },
+  {
+    "word": "在",
+    "pinyin": "zài",
+    "hsk_level": 1,
+    "part_of_speech": "v/adv",
+    "meaning_en": "at; in; (progressive)",
+    "meaning_zh": "在",
+    "examples": [
+      {
+        "zh": "我在家。",
+        "pinyin": "wǒ zài jiā",
+        "en": "I am at home."
+      }
+    ],
+    "frequency_rank": 17
+  },
+  {
+    "word": "家",
+    "pinyin": "jiā",
+    "hsk_level": 1,
+    "part_of_speech": "n",
+    "meaning_en": "home; family",
+    "meaning_zh": "家",
+    "examples": [
+      {
+        "zh": "我的家在北京。",
+        "pinyin": "wǒ de jiā zài běijīng",
+        "en": "My home is in Beijing."
+      }
+    ],
+    "frequency_rank": 18
+  },
+  {
+    "word": "吃",
+    "pinyin": "chī",
+    "hsk_level": 1,
+    "part_of_speech": "v",
+    "meaning_en": "to eat",
+    "meaning_zh": "吃",
+    "examples": [
+      {
+        "zh": "我想吃面条。",
+        "pinyin": "wǒ xiǎng chī miàntiáo",
+        "en": "I want to eat noodles."
+      }
+    ],
+    "frequency_rank": 19
+  },
+  {
+    "word": "喝",
+    "pinyin": "hē",
+    "hsk_level": 1,
+    "part_of_speech": "v",
+    "meaning_en": "to drink",
+    "meaning_zh": "喝",
+    "examples": [
+      {
+        "zh": "我喝茶。",
+        "pinyin": "wǒ hē chá",
+        "en": "I drink tea."
+      }
+    ],
+    "frequency_rank": 20
+  },
+  {
+    "word": "水",
+    "pinyin": "shuǐ",
+    "hsk_level": 1,
+    "part_of_speech": "n",
+    "meaning_en": "water",
+    "meaning_zh": "水",
+    "examples": [
+      {
+        "zh": "请给我一杯水。",
+        "pinyin": "qǐng gěi wǒ yì bēi shuǐ",
+        "en": "Please give me a cup of water."
+      }
+    ],
+    "frequency_rank": 21
+  },
+  {
+    "word": "茶",
+    "pinyin": "chá",
+    "hsk_level": 1,
+    "part_of_speech": "n",
+    "meaning_en": "tea",
+    "meaning_zh": "茶",
+    "examples": [
+      {
+        "zh": "你喜欢喝茶吗？",
+        "pinyin": "nǐ xǐ huan hē chá ma",
+        "en": "Do you like to drink tea?"
+      }
+    ],
+    "frequency_rank": 22
+  },
+  {
+    "word": "饭",
+    "pinyin": "fàn",
+    "hsk_level": 1,
+    "part_of_speech": "n",
+    "meaning_en": "rice; meal",
+    "meaning_zh": "饭",
+    "examples": [
+      {
+        "zh": "我吃饭。",
+        "pinyin": "wǒ chī fàn",
+        "en": "I eat (a meal)."
+      }
+    ],
+    "frequency_rank": 23
+  },
+  {
+    "word": "面条",
+    "pinyin": "miàntiáo",
+    "hsk_level": 1,
+    "part_of_speech": "n",
+    "meaning_en": "noodles",
+    "meaning_zh": "面条",
+    "examples": [
+      {
+        "zh": "我喜欢吃面条。",
+        "pinyin": "wǒ xǐ huan chī miàntiáo",
+        "en": "I like to eat noodles."
+      }
+    ],
+    "frequency_rank": 24
+  },
+  {
+    "word": "个",
+    "pinyin": "gè",
+    "hsk_level": 1,
+    "part_of_speech": "mw",
+    "meaning_en": "general measure word",
+    "meaning_zh": "个",
+    "examples": [
+      {
+        "zh": "一个苹果。",
+        "pinyin": "yí ge píngguǒ",
+        "en": "One apple."
+      }
+    ],
+    "frequency_rank": 25
+  },
+  {
+    "word": "一",
+    "pinyin": "yī",
+    "hsk_level": 1,
+    "part_of_speech": "num",
+    "meaning_en": "one",
+    "meaning_zh": "一",
+    "examples": [
+      {
+        "zh": "我有一个哥哥。",
+        "pinyin": "wǒ yǒu yí ge gēge",
+        "en": "I have an older brother."
+      }
+    ],
+    "frequency_rank": 26
+  },
+  {
+    "word": "二",
+    "pinyin": "èr",
+    "hsk_level": 1,
+    "part_of_speech": "num",
+    "meaning_en": "two",
+    "meaning_zh": "二",
+    "examples": [
+      {
+        "zh": "我有二个朋友。",
+        "pinyin": "wǒ yǒu èr ge péngyou",
+        "en": "I have two friends."
+      }
+    ],
+    "frequency_rank": 27
+  },
+  {
+    "word": "三",
+    "pinyin": "sān",
+    "hsk_level": 1,
+    "part_of_speech": "num",
+    "meaning_en": "three",
+    "meaning_zh": "三",
+    "examples": [
+      {
+        "zh": "三个人。",
+        "pinyin": "sān ge rén",
+        "en": "Three people."
+      }
+    ],
+    "frequency_rank": 28
+  },
+  {
+    "word": "今天",
+    "pinyin": "jīntiān",
+    "hsk_level": 1,
+    "part_of_speech": "n",
+    "meaning_en": "today",
+    "meaning_zh": "今天",
+    "examples": [
+      {
+        "zh": "今天天气很好。",
+        "pinyin": "jīntiān tiānqì hěn hǎo",
+        "en": "The weather is nice today."
+      }
+    ],
+    "frequency_rank": 29
+  },
+  {
+    "word": "明天",
+    "pinyin": "míngtiān",
+    "hsk_level": 1,
+    "part_of_speech": "n",
+    "meaning_en": "tomorrow",
+    "meaning_zh": "明天",
+    "examples": [
+      {
+        "zh": "明天我们去公园。",
+        "pinyin": "míngtiān wǒmen qù gōngyuán",
+        "en": "We'll go to the park tomorrow."
+      }
+    ],
+    "frequency_rank": 30
+  },
+  {
+    "word": "人",
+    "pinyin": "rén",
+    "hsk_level": 1,
+    "part_of_speech": "n",
+    "meaning_en": "person; people",
+    "meaning_zh": "人",
+    "examples": [
+      {
+        "zh": "他是好人。",
+        "pinyin": "tā shì hǎo rén",
+        "en": "He is a good person."
+      }
+    ],
+    "frequency_rank": 31
+  },
+  {
+    "word": "朋友",
+    "pinyin": "péngyou",
+    "hsk_level": 1,
+    "part_of_speech": "n",
+    "meaning_en": "friend",
+    "meaning_zh": "朋友",
+    "examples": [
+      {
+        "zh": "他是我的好朋友。",
+        "pinyin": "tā shì wǒ de hǎo péngyou",
+        "en": "He is my good friend."
+      }
+    ],
+    "frequency_rank": 32
+  },
+  {
+    "word": "老师",
+    "pinyin": "lǎoshī",
+    "hsk_level": 1,
+    "part_of_speech": "n",
+    "meaning_en": "teacher",
+    "meaning_zh": "老师",
+    "examples": [
+      {
+        "zh": "我的中文老师很好。",
+        "pinyin": "wǒ de zhōngwén lǎoshī hěn hǎo",
+        "en": "My Chinese teacher is great."
+      }
+    ],
+    "frequency_rank": 33
+  },
+  {
+    "word": "学生",
+    "pinyin": "xuésheng",
+    "hsk_level": 1,
+    "part_of_speech": "n",
+    "meaning_en": "student",
+    "meaning_zh": "学生",
+    "examples": [
+      {
+        "zh": "我是一名学生。",
+        "pinyin": "wǒ shì yì míng xuésheng",
+        "en": "I am a student."
+      }
+    ],
+    "frequency_rank": 34
+  },
+  {
+    "word": "好",
+    "pinyin": "hǎo",
+    "hsk_level": 1,
+    "part_of_speech": "adj/adv",
+    "meaning_en": "good; well",
+    "meaning_zh": "好",
+    "examples": [
+      {
+        "zh": "你好吗？我很好。",
+        "pinyin": "nǐ hǎo ma? wǒ hěn hǎo",
+        "en": "How are you? I'm very well."
+      }
+    ],
+    "frequency_rank": 35
+  },
+  {
+    "word": "很",
+    "pinyin": "hěn",
+    "hsk_level": 1,
+    "part_of_speech": "adv",
+    "meaning_en": "very",
+    "meaning_zh": "很",
+    "examples": [
+      {
+        "zh": "我很喜欢中文。",
+        "pinyin": "wǒ hěn xǐ huan zhōngwén",
+        "en": "I really like Chinese."
+      }
+    ],
+    "frequency_rank": 36
+  },
+  {
+    "word": "会",
+    "pinyin": "huì",
+    "hsk_level": 1,
+    "part_of_speech": "v",
+    "meaning_en": "can; know how to",
+    "meaning_zh": "会",
+    "examples": [
+      {
+        "zh": "我会说中文。",
+        "pinyin": "wǒ huì shuō zhōngwén",
+        "en": "I can speak Chinese."
+      }
+    ],
+    "frequency_rank": 37
+  },
+  {
+    "word": "能",
+    "pinyin": "néng",
+    "hsk_level": 1,
+    "part_of_speech": "v",
+    "meaning_en": "can; be able to",
+    "meaning_zh": "能",
+    "examples": [
+      {
+        "zh": "我能帮你吗？",
+        "pinyin": "wǒ néng bāng nǐ ma",
+        "en": "Can I help you?"
+      }
+    ],
+    "frequency_rank": 38
+  },
+  {
+    "word": "可以",
+    "pinyin": "kěyǐ",
+    "hsk_level": 1,
+    "part_of_speech": "v/adj",
+    "meaning_en": "can; may",
+    "meaning_zh": "可以",
+    "examples": [
+      {
+        "zh": "我可以坐这里吗？",
+        "pinyin": "wǒ kěyǐ zuò zhèlǐ ma",
+        "en": "May I sit here?"
+      }
+    ],
+    "frequency_rank": 39
+  },
+  {
+    "word": "要",
+    "pinyin": "yào",
+    "hsk_level": 1,
+    "part_of_speech": "v",
+    "meaning_en": "to want; will",
+    "meaning_zh": "要",
+    "examples": [
+      {
+        "zh": "我要一杯咖啡。",
+        "pinyin": "wǒ yào yì bēi kāfēi",
+        "en": "I want a cup of coffee."
+      }
+    ],
+    "frequency_rank": 40
+  },
+  {
+    "word": "了",
+    "pinyin": "le",
+    "hsk_level": 1,
+    "part_of_speech": "particle",
+    "meaning_en": "completed action particle",
+    "meaning_zh": "了",
+    "examples": [
+      {
+        "zh": "我吃了饭。",
+        "pinyin": "wǒ chī le fàn",
+        "en": "I ate (already)."
+      }
+    ],
+    "frequency_rank": 41
+  },
+  {
+    "word": "吗",
+    "pinyin": "ma",
+    "hsk_level": 1,
+    "part_of_speech": "particle",
+    "meaning_en": "question particle",
+    "meaning_zh": "吗",
+    "examples": [
+      {
+        "zh": "你是学生吗？",
+        "pinyin": "nǐ shì xuésheng ma",
+        "en": "Are you a student?"
+      }
+    ],
+    "frequency_rank": 42
+  },
+  {
+    "word": "什么",
+    "pinyin": "shénme",
+    "hsk_level": 1,
+    "part_of_speech": "pron",
+    "meaning_en": "what",
+    "meaning_zh": "什么",
+    "examples": [
+      {
+        "zh": "你叫什么名字？",
+        "pinyin": "nǐ jiào shénme míngzi",
+        "en": "What's your name?"
+      }
+    ],
+    "frequency_rank": 43
+  },
+  {
+    "word": "谁",
+    "pinyin": "shéi",
+    "hsk_level": 1,
+    "part_of_speech": "pron",
+    "meaning_en": "who",
+    "meaning_zh": "谁",
+    "examples": [
+      {
+        "zh": "他是谁？",
+        "pinyin": "tā shì shéi",
+        "en": "Who is he?"
+      }
+    ],
+    "frequency_rank": 44
+  },
+  {
+    "word": "哪",
+    "pinyin": "nǎ",
+    "hsk_level": 1,
+    "part_of_speech": "pron",
+    "meaning_en": "which",
+    "meaning_zh": "哪",
+    "examples": [
+      {
+        "zh": "你去哪？",
+        "pinyin": "nǐ qù nǎ",
+        "en": "Where are you going?"
+      }
+    ],
+    "frequency_rank": 45
+  },
+  {
+    "word": "几",
+    "pinyin": "jǐ",
+    "hsk_level": 1,
+    "part_of_speech": "pron",
+    "meaning_en": "how many; a few",
+    "meaning_zh": "几",
+    "examples": [
+      {
+        "zh": "你有几个朋友？",
+        "pinyin": "nǐ yǒu jǐ ge péngyou",
+        "en": "How many friends do you have?"
+      }
+    ],
+    "frequency_rank": 46
+  },
+  {
+    "word": "多少",
+    "pinyin": "duō shǎo",
+    "hsk_level": 1,
+    "part_of_speech": "pron",
+    "meaning_en": "how many; how much",
+    "meaning_zh": "多少",
+    "examples": [
+      {
+        "zh": "这个多少钱？",
+        "pinyin": "zhège duō shǎo qián",
+        "en": "How much is this?"
+      }
+    ],
+    "frequency_rank": 47
+  },
+  {
+    "word": "中国",
+    "pinyin": "Zhōngguó",
+    "hsk_level": 1,
+    "part_of_speech": "n",
+    "meaning_en": "China",
+    "meaning_zh": "中国",
+    "examples": [
+      {
+        "zh": "我去中国。",
+        "pinyin": "wǒ qù zhōngguó",
+        "en": "I go to China."
+      }
+    ],
+    "frequency_rank": 48
+  },
+  {
+    "word": "中文",
+    "pinyin": "Zhōngwén",
+    "hsk_level": 1,
+    "part_of_speech": "n",
+    "meaning_en": "Chinese language",
+    "meaning_zh": "中文",
+    "examples": [
+      {
+        "zh": "我学中文。",
+        "pinyin": "wǒ xué zhōngwén",
+        "en": "I learn Chinese."
+      }
+    ],
+    "frequency_rank": 49
+  }
+]

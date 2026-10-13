@@ -1,0 +1,193 @@
+[
+  {
+    "name": "lookup_hsk_word",
+    "description": "查 HSK 词汇。按汉字或拼音查，返回 pinyin / HSK 等级 / 词性 / 英文释义 / 例句。如果不在词表返回 found:false。Kai 必须先调这个工具再回答 HSK 词汇问题——不要凭记忆。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "word": {
+          "type": "string",
+          "description": "要查的中文词或拼音（如 '你好' 或 'ni hao'）"
+        }
+      },
+      "required": ["word"]
+    }
+  },
+  {
+    "name": "lookup_hsk_batch",
+    "description": "批量查 HSK 词汇。最多 20 个。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "words": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "要查的词列表"
+        }
+      },
+      "required": ["words"]
+    }
+  },
+  {
+    "name": "hsk_random_words",
+    "description": "按 HSK 等级随机抽 N 个词。用于造句练习、复习。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "count": { "type": "number", "description": "抽几个（1-20）" },
+        "hsk_level": { "type": "number", "description": "限定 HSK 等级（1-9），不传则全等级" }
+      },
+      "required": ["count"]
+    }
+  },
+  {
+    "name": "hsk_list_by_level",
+    "description": "列某 HSK 等级所有词。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "hsk_level": { "type": "number", "description": "HSK 等级（1-9）" },
+        "limit": { "type": "number", "description": "最多列几个（默认 50）" }
+      },
+      "required": ["hsk_level"]
+    }
+  },
+  {
+    "name": "hsk_stats",
+    "description": "查 HSK 词库统计（每等级多少词）。",
+    "parameters": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "add_mistake",
+    "description": "记录学生错题。Kai 必须立即调这个工具——所有错都记。type: vocab 词错 / grammar 语法错 / pronunciation 发音错。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "type": { "type": "string", "enum": ["vocab", "grammar", "pronunciation"], "description": "错题类型" },
+        "item": { "type": "string", "description": "错的内容（错的词或语法点）" },
+        "context": { "type": "string", "description": "完整的句子（学生实际说的）" }
+      },
+      "required": ["type", "item"]
+    }
+  },
+  {
+    "name": "list_mistakes",
+    "description": "列学生的错题（未完全掌握的）。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "filter_type": { "type": "string", "enum": ["vocab", "grammar", "pronunciation"] },
+        "limit": { "type": "number", "description": "最多列几个（默认 20）" }
+      }
+    }
+  },
+  {
+    "name": "mark_corrected",
+    "description": "标记错题已掌握。corrected_count +1，达到 3 自动毕业。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "item": { "type": "string", "description": "已掌握的词或语法点" }
+      },
+      "required": ["item"]
+    }
+  },
+  {
+    "name": "get_student_profile",
+    "description": "一次拿全部 4 画像（个人/学习/历史/会话）。对话开始会自动注入，不需要手动调；中途需要重读时调。",
+    "parameters": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "update_personal",
+    "description": "更新学生个人画像（HSK、年龄、兴趣、职业等）。只在学生明确说出时才调。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "age": { "type": "number" },
+        "hsk_level": { "type": "number", "description": "1-9" },
+        "target_hsk": { "type": "number", "description": "1-9" },
+        "interests": { "type": "array", "items": { "type": "string" } },
+        "occupation": { "type": "string" },
+        "location": { "type": "string" },
+        "privacy_level": { "type": "string", "enum": ["standard", "strict"] }
+      }
+    }
+  },
+  {
+    "name": "update_learning",
+    "description": "更新学生学习画像（已掌握/薄弱词、语法、发音问题）。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "vocab_mastered": { "type": "array", "items": { "type": "string" } },
+        "vocab_weak": { "type": "array", "items": { "type": "string" } },
+        "grammar_mastered": { "type": "array", "items": { "type": "string" } },
+        "grammar_weak": { "type": "array", "items": { "type": "string" } },
+        "pronunciation_issues": { "type": "array", "items": { "type": "string" } },
+        "learning_speed": { "type": "string", "enum": ["slow", "normal", "fast"] }
+      }
+    }
+  },
+  {
+    "name": "add_history",
+    "description": "会话结束加一条学习记录（话题、新词、新语法、错题数）。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "topic": { "type": "string", "description": "本轮话题" },
+        "duration_min": { "type": "number" },
+        "new_words": { "type": "array", "items": { "type": "string" } },
+        "new_grammar": { "type": "array", "items": { "type": "string" } },
+        "mistakes_count": { "type": "number" }
+      }
+    }
+  },
+  {
+    "name": "get_history",
+    "description": "查学生近期学习记录。",
+    "parameters": {
+      "type": "object",
+      "properties": {}
+    }
+  },
+  {
+    "name": "get_due_cards",
+    "description": "拿待复习的 FSRS 卡片。session_start 自动注入；中途要查时调。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "limit": { "type": "number", "description": "最多几个（默认 20）" }
+      }
+    }
+  },
+  {
+    "name": "schedule_review",
+    "description": "对 FSRS 卡片评分。1=Again（忘了）/ 2=Hard（勉强记住）/ 3=Good（正常记住）/ 4=Easy（轻松记住）。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "card_id": { "type": "string", "description": "卡片 ID（词或语法点）" },
+        "rating": { "type": "number", "description": "1-4" }
+      },
+      "required": ["card_id", "rating"]
+    }
+  },
+  {
+    "name": "add_fsrs_card",
+    "description": "加新卡到 FSRS（错题入复习）。",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "card_id": { "type": "string", "description": "卡片 ID（词或语法点）" }
+      },
+      "required": ["card_id"]
+    }
+  }
+]

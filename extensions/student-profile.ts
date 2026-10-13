@@ -309,6 +309,7 @@ export default function (pi: ExtensionAPI) {
   // 会话开始注入 4 个画像维度
   pi.on('session_start', async (ctx) => {
     const studentId = ctx.session.metadata?.studentId ?? 'default'
+    const sessionId = ctx.session.metadata?.sessionId
     const personal: any = db.prepare(`SELECT * FROM students WHERE id = ?`).get(studentId)
     if (!personal) return {}
 
@@ -323,6 +324,25 @@ export default function (pi: ExtensionAPI) {
       WHERE student_id = ? AND resolved = 0
       ORDER BY last_mentioned_at DESC LIMIT 3
     `).all(studentId)
+
+    // T-206: 读最新 Raven 多模态感知信号（最近 3 条）
+    let ravenSection = '- 暂无'
+    if (sessionId) {
+      const session: any = db.prepare(`SELECT last_raven_signals, last_raven_at FROM sessions WHERE id = ?`).get(sessionId)
+      if (session?.last_raven_signals) {
+        try {
+          const signals: any[] = JSON.parse(session.last_raven_signals)
+          const recent = signals.slice(-3)
+          if (recent.length > 0) {
+            ravenSection = recent
+              .map((s: any) => `- ${s.signal}${s.confidence ? ` (置信度 ${(s.confidence * 100).toFixed(0)}%)` : ''}`)
+              .join('\n')
+          }
+        } catch {
+          // ignore parse error
+        }
+      }
+    }
 
     // 隐私过滤
     const privacy = personal.privacy_level || 'standard'
@@ -363,11 +383,16 @@ ${ongoingTopics.length > 0
   ? ongoingTopics.map(t => `- ${t.topic}`).join('\n')
   : '- 无'}
 
-请根据以上 4 个画像维度，个性化教学。
+## 5. 多模态感知（Tavus Raven，最近 3 条）
+${ravenSection}
+
+请根据以上 4-5 个画像维度，个性化教学。
 - 学习画像决定难度、词汇、复习什么
 - 个人画像决定话题、例子
 - 历史决定连续性
+- Raven 信号提示当前学生状态（犹豫 / 自信 / 疲惫 / 困惑），基于这个自然调整
 - 严格按 system/SYSTEM.md 的规则教学
+- 不要告诉学生"系统显示你..."或直接复述 Raven 信号
 `
     }
   })

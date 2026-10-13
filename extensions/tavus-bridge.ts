@@ -36,13 +36,29 @@ const STUDENT_ID = process.env.STUDENT_ID || 'default'
 const DEFAULT_PORT = parseInt(process.env.TAVUS_BRIDGE_PORT || '7123', 10)
 const TRANSCRIPT_DIR = process.env.TRANSCRIPT_DIR || `${process.env.HOME || '~'}/.zh-tutor/transcripts`
 
-const studentsDb = new Database((process.env.HOME || '~') + '/.zh-tutor/students.db')
+// Lazy: 第一次写时建好目录（避免 import 时目录不存在）
+import { mkdirSync as _mkdirSync } from 'node:fs'
+function getStudentsDb() {
+  const dir = (process.env.HOME || '~') + '/.zh-tutor'
+  _mkdirSync(dir, { recursive: true })
+  const db = new Database(dir + '/students.db')
+  db.pragma('foreign_keys = OFF')  // sessions 可能在学生注册前到达，FK 关闭
+  return db
+}
+let _studentsDb: any = null
+const studentsDb = new Proxy({} as any, {
+  get(_t, prop) {
+    if (!_studentsDb) _studentsDb = getStudentsDb()
+    return (_studentsDb as any)[prop]
+  },
+})
 
 // 工具映射：endpoint → (toolName, defaultParams)
 export const TOOL_MAP: Record<string, [string, Record<string, any>?]> = {
   '/tools/lookup_hsk_word': ['hsk_lookup'],
   '/tools/lookup_hsk_batch': ['hsk_lookup_batch'],
   '/tools/hsk_random_words': ['hsk_random_words'],
+  '/tools/hsk_list_by_level': ['hsk_list_by_level'],
   '/tools/hsk_stats': ['hsk_stats'],
   '/tools/add_mistake': ['mistake_log', { action: 'add' }],
   '/tools/list_mistakes': ['mistake_log', { action: 'list' }],
@@ -116,6 +132,47 @@ async function saveTranscript(payload: any) {
 }
 
 /**
+ * T-206: 保存 Raven 多模态感知信号
+ * payload: { conversation_id, signals: [{ signal, confidence, ts }], student_id }
+ * 保留最近 20 条；新信号替换最旧
+ */
+async function saveRavenSignals(payload: any) {
+  const studentId = payload.student_id || STUDENT_ID
+  const conversationId = payload.conversation_id || `unknown_${Date.now()}`
+  const newSignals = Array.isArray(payload.signals) ? payload.signals : []
+
+  // 1. 先 INSERT 会话（如不存在）
+  studentsDb.prepare(`
+    INSERT OR IGNORE INTO sessions (id, student_id, tavus_conversation_id, started_at)
+    VALUES (?, ?, ?, ?)
+  `).run(conversationId, studentId, conversationId, new Date().toISOString())
+
+  // 2. 读旧 signals
+  const row = studentsDb.prepare(`SELECT last_raven_signals FROM sessions WHERE id = ?`).get(conversationId) as any
+  let existing: any[] = []
+  try {
+    existing = row?.last_raven_signals ? JSON.parse(row.last_raven_signals) : []
+  } catch {
+    existing = []
+  }
+
+  // 3. 合并：保留最近 20 条
+  const merged = [...existing, ...newSignals].slice(-20)
+
+  // 4. 写回
+  studentsDb.prepare(`
+    UPDATE sessions SET last_raven_signals = ?, last_raven_at = ?
+    WHERE id = ?
+  `).run(JSON.stringify(merged), new Date().toISOString(), conversationId)
+
+  return {
+    saved: true,
+    conversation_id: conversationId,
+    signal_count: merged.length,
+  }
+}
+
+/**
  * 创建 bridge HTTP server（暴露供测试用）
  */
 export function createBridgeServer(
@@ -155,6 +212,18 @@ export function createBridgeServer(
       try {
         const body = await readJsonBody(req)
         const result = await saveTranscript(body)
+        respondJson(res, 200, { ok: true, ...result })
+      } catch (e: any) {
+        respondJson(res, 500, { ok: false, error: e.message })
+      }
+      return
+    }
+
+    // T-206: Raven 多模态感知信号
+    if (url === '/webhook/tavus/raven' && req.method === 'POST') {
+      try {
+        const body = await readJsonBody(req)
+        const result = await saveRavenSignals(body)
         respondJson(res, 200, { ok: true, ...result })
       } catch (e: any) {
         respondJson(res, 500, { ok: false, error: e.message })

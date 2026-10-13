@@ -25,7 +25,9 @@ beforeAll(async () => {
       started_at TEXT,
       ended_at TEXT,
       transcript_path TEXT,
-      summary TEXT
+      summary TEXT,
+      last_raven_signals TEXT,
+      last_raven_at TEXT
     );
   `)
   db.close()
@@ -122,5 +124,35 @@ describe('tavus-bridge HTTP server', () => {
     expect(res.status).toBe(200)
     expect(res.data.saved).toBe(true)
     expect(res.data.conversation_id).toBe('test-conv-1')
+  })
+
+  it('POST /webhook/tavus/raven 应存 Raven signals', async () => {
+    const res = await httpRequest('POST', '/webhook/tavus/raven', {
+      conversation_id: 'test-conv-raven',
+      student_id: 'test-student',
+      signals: [
+        { signal: 'user hesitant, looking away', confidence: 0.85, ts: Date.now() },
+        { signal: 'user pauses 3 seconds', confidence: 0.9, ts: Date.now() },
+      ],
+    })
+    expect(res.status).toBe(200)
+    expect(res.data.saved).toBe(true)
+    expect(res.data.conversation_id).toBe('test-conv-raven')
+    expect(res.data.signal_count).toBe(2)
+  })
+
+  it('POST /webhook/tavus/raven 多次调用应累积（保留最近 20 条）', async () => {
+    // 上一个测试加了 2 条
+    for (let i = 0; i < 25; i++) {
+      await httpRequest('POST', '/webhook/tavus/raven', {
+        conversation_id: 'test-conv-raven',
+        signals: [{ signal: `signal ${i}`, confidence: 0.5, ts: Date.now() + i }],
+      })
+    }
+    const res = await httpRequest('POST', '/webhook/tavus/raven', {
+      conversation_id: 'test-conv-raven',
+      signals: [{ signal: 'final signal', confidence: 1.0 }],
+    })
+    expect(res.data.signal_count).toBeLessThanOrEqual(20)
   })
 })

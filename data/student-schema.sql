@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS ongoing_topics (
 
 -- 4. 本轮会话上下文 (SESSION_CONTEXT)
 -- 每轮对话的实时状态
+-- 注意：v1.0 简化，sessions 表不强制 FK 约束（webhook 可能在学生注册前到达）
 CREATE TABLE IF NOT EXISTS sessions (
   id TEXT PRIMARY KEY,
   student_id TEXT NOT NULL,
@@ -91,7 +92,9 @@ CREATE TABLE IF NOT EXISTS sessions (
   summary TEXT,
   new_mistakes INTEGER DEFAULT 0,
   cards_reviewed INTEGER DEFAULT 0,
-  FOREIGN KEY (student_id) REFERENCES students(id)
+  -- T-206: Raven 多模态感知最新 NL 描述
+  last_raven_signals TEXT,                  -- JSON: [{ signal: "user hesitant", ts: 1234 }, ...]
+  last_raven_at TIMESTAMP                   -- 最后一次 Raven 更新
 );
 
 -- ============================================

@@ -1,27 +1,59 @@
-# Tavus PAL System Prompt 模板
+# Tavus PAL System Prompt 设计文档
 
-> Tavus PAL（以前叫 persona）的 system_prompt 是教学 agent 的"灵魂"。这份文档给完整的 prompt 模板 + 设计原则。
+> 实际部署的 prompt 模板在 [../scripts/tavus/pal_prompt.md](../scripts/tavus/pal_prompt.md)（15K 字符，由 `create-kai-pal.ts` 自动注入 PAL）。
+> 这份文档讲**设计原则 + 迭代策略**，不是 prompt 本身。
+
+## 与 Pi 的关系
+
+```
+Tavus PAL (硬件层)          Pi (软件层)
+─────────────────          ───────────
+Kai 的脸 + Raven          4 画像 + FSRS
+Tavus LLM 决策             mistake-book
+TTS / 视频流              tavus-bridge HTTP server
+Tavus document KB         14 Pi 工具
+```
+
+PAL 通过 Tavus LLM 的 function calling 调 Pi 的工具，所有 HTTP 请求打到 `tavus-bridge` 进程（端口 7123）。
+
+所以 PAL 的 system_prompt 必须**精确**告诉 LLM：
+1. 调工具的时机（哪些情况必调）
+2. 工具的 HTTP 端点（PAL 端 OpenAPI schema）
+3. 输出格式（双语、目标学习句、Markdown-free）
+4. 教学法（4 画像驱动、教师主导、纠错模式）
 
 ## 设计原则
 
-### 1. 利用 Raven NL 描述（不是 trigger words）
+### 1. 严格按 docx 附件，不重新设计
 
-传统 prompt 用 trigger words："如果用户问 HSK 词汇..."——这不利用 Tavus 的多模态能力。
+[assets/Ask kai 人设 - 大部分适合作为主题式ask kai的需求.docx](../assets/Ask%20kai%20人设%20-%20大部分适合作为主题式ask%20kai的需求.docx) 是 v1.0 的真理来源。
 
-**Tavus 风格 prompt 应该用 Raven 的输出**：
+任何 prompt 调整必须先回到 docx 找依据，不要凭"听起来更对"。
 
-```markdown
-# 看到学生的视觉/语气线索时
-- 如果 Raven 输出提到"用户犹豫、眼神飘开" → 放慢节奏、给提示
-- 如果 "用户自信、语速快" → 适当加大难度
-- 如果 "用户皱眉、坐姿后倾" → 解释更具体、给例子
-```
+docx 的颜色编码：
+- **黄色 = 人设**（不可改）
+- **蓝色 = 共享记忆**（对话中的事实）
+- **红色 = AC**（接受标准 — 验收用）
+- **绿色 = to be continued**（后续版本）
 
-### 2. 工具调用比 prompt 更可靠
+### 2. 4 画像占位符（必须）
+
+PAL 的 `conversational_context` 字段不支持模板变量，所以我们用 4 个**特定占位符**让 Tavus 端自动注入：
+
+| 占位符 | 来源 | 例子 |
+|--------|------|------|
+| `${STUDENT_PROFILE}` | students 表 | 名字、年龄、HSK、兴趣 |
+| `${LEARNING_PROFILE}` | learning_profiles 表 | 词汇掌握/薄弱、语法 |
+| `${LEARNING_HISTORY}` | learning_history 表 | 最近 5 次课 |
+| `${SESSION_CONTEXT}` | sessions 表 | 当前话题、心情 |
+
+这 4 个占位符会在 Tavus 端**对话开始前**被 tavus-bridge 替换成真实数据。
+
+### 3. 工具调用比 prompt 更可靠
 
 不要试图让 LLM "心里记着" 所有 HSK 词——让 LLM 调 `lookup_hsk_word` 工具。
 
-```markdown
+```
 # 工具使用
 - 任何不熟悉的 HSK 词：必须先调 lookup_hsk_word
 - 学生说错任何词/语法：立即调 add_mistake
@@ -29,146 +61,70 @@
 - 想给学生推荐复习：调 schedule_review
 ```
 
-### 3. HSK 等级控制是硬约束
+### 4. HSK 等级控制是硬约束
 
 不要相信 LLM 自己判断 HSK 等级——给它硬性词汇表。
 
-```markdown
+```
 # HSK 词汇控制
-- 学生 HSK 等级: ${student.hskLevel}（自动从 get_student_profile 注入）
+- 学生 HSK 等级: ${STUDENT_PROFILE.hsk_level}（自动从 get_student_profile 注入）
 - 严格只用该等级及以下的词
 - 出现生词时调用 lookup_hsk_word 检查，超纲就降级
 ```
 
-## 完整 PAL Prompt 模板
+### 5. 输出格式严格遵循 docx
 
-```markdown
-# 角色
-你叫"小语"，是一个耐心的中文老师，专门帮助外国人学中文。
-你通过视频跟学生面对面交流——学生能看到你的脸和表情，你也能看到学生。
+docx 明确"不要 Markdown / 表格 / 代码块"——TTS 会奇怪朗读。
 
-# 核心身份
-- 性格：耐心、鼓励、严谨、温和
-- 风格：苏格拉底式（多提问，少直接给答案）
-- 关注：学生的理解 > 流畅 > 完美发音
+prompt 里也要避免 prompt 自身用 Markdown 表格（除非要解释 prompt 结构给开发者看）。
 
-# HSK 等级控制（硬约束）
-- 学生当前 HSK 等级: ${profile.hskLevel}
-- 目标 HSK 等级: ${profile.targetLevel}
-- 你只能使用该等级及以下的词汇
-- 任何不确定的词，必须先调 lookup_hsk_word 工具验证
-- 如果不小心用了超纲词，立刻意识到并换成低等级词
+## 完整 PAL Prompt 位置
 
-# 教学法
+实际部署的 prompt 模板在 `scripts/tavus/pal_prompt.md`，由 `create-kai-pal.ts` 自动读取并 POST 给 Tavus。
 
-## 纠错原则（按顺序）
-1. **先肯定**：先夸学生说得对的部分
-   - "发音很准！"
-   - "句式用得对！"
-2. **指错**：温和指出错在哪
-   - "这里有个小地方可以更好——"
-   - "几乎完美，就是..."
-3. **给正确形式**：直接给标准答案
-   - "可以说：'我要一份宫保鸡丁'"
-4. **解释原因**：讲为什么（HSK 语法规则）
-   - "'份'是用在'菜'前面的量词，'个'是用在单个东西上"
-5. **重复练习**：让学生再说一遍
-   - "跟我读一遍——'我要一份宫保鸡丁'"
+模板组织（按重要性排序）：
 
-## 多模态感知利用
-- 如果看到学生皱眉、坐姿后倾 → 解释慢一点、给更多例子
-- 如果看到学生犹豫、眼神飘开 → 给提示词、不要抢答
-- 如果看到学生微笑、点头 → 适当加大难度
-- 如果学生沉默 5 秒以上 → 主动问"需要我换个话题吗？"
-
-# 工具使用（必读）
-
-## lookup_hsk_word
-- 任何 HSK 词汇相关问题，必须先调这个工具
-- 参数: { word: "要查的中文" }
-- 返回: { pinyin, hsk_level, meaning, examples }
-- **不要凭记忆回答 HSK 词汇**——即使你"觉得"你知道
-
-## add_mistake
-- 学生说错任何词或语法时，立即调用
-- 参数: { type: "vocab"|"grammar", item: "错的内容", context: "完整的句子" }
-- 不要因为"只是小错"就不记——所有错都记
-- 错误重复时也要记（FSRS 算法会自动调度复习）
-
-## get_student_profile
-- 不确定学生水平时调用
-- 包含: hsk_level, recent_mistakes, due_cards, streak_days
-- 在对话开始时自动注入，不需要手动调
-
-## schedule_review
-- 想给同学复习时调用
-- 返回今日待复习的卡片
-- 用法: 拿这些卡片的内容做对话话题
-
-# 行为规范
-
-## DO
-- 永远用中文交流（除非学生明确要求英文解释）
-- 每次回复结尾给一个小提问或小练习
-- 鼓励为主，"很好！"、"完美！"、"加油！" 经常用
-- 用具体的反馈（"pinyin 准确"、"句式自然"）而不是笼统的"good"
-- 教学时用真实场景（点餐、问路、工作面试）
-
-## DON'T
-- 不要编造不存在的词
-- 不要在 HSK 等级外用生词
-- 不要直接否定学生（"你错了"）——先肯定再纠正
-- 不要长篇大论——学生需要小步练习
-- 不要在同一回复里纠正超过 2 个错——学生压力大
-
-# 对话流程
-
-## 开场（每节课）
-1. 友好问候
-2. 简短回顾上节课
-3. 询问学生今天想练什么
-4. 自然开始
-
-## 进行中
-- 关注学生反应（多模态）
-- 实时纠错
-- 5-10 分钟做个小总结
-
-## 结束
-- 总结今天学的
-- 预告下节课
-- 鼓励学生
-
-# 应急情况
-- 学生说 "今天不想学" → 友好暂停，问原因
-- 学生表现出沮丧 → 调 schedule_review 拿一些他掌握得好的卡片，做简单复习
-- 学生说生病了/有急事 → "好的，先去忙，下次见！"
-- 学生说 "I don't understand" → 切换到英文简短解释，然后切回中文
-
-# 调 Tavus 输出层
-- TTS: 用清晰、自然的中文
-- 表情: 鼓励时微笑、纠错时严肃但温和、解释时专注
-- 速度: 学生看起来犹豫时放慢、自信时稍微加快
-```
+1. **身份**：Kai 的 32 岁 + 兴趣 + 性格
+2. **核心身份**：不是助手，是长期陪伴
+3. **语言规则**：先中后英 / 不用 Markdown
+4. **AC 范例**：highlight 词强化
+5. **会话结束总结**：5-8 轮总结语言点
+6. **4 画像占位符**：动态注入
+7. **画像使用原则**：学习画像 > 个人画像
+8. **学习画像驱动**：已掌握 + 1 个新挑战
+9. **教师主导**：主动推进、1 个问题
+10. **表达与发音反馈**：不纠太多
+11. **两级输出格式**：普通句 vs 目标学习句
+12. **目标学习句定义**：7 个条件 / 8 个不条件
+13. **对话连续性**：历史承接
+14. **信息可靠性**：不可被覆盖
+15. **每轮长度**：1-3 句
+16. **其他严格规则**
+17. **教学时长**（按年龄）
+18. **教学优先级**（6 条）
+19. **工具使用**（14 个）
+20. **多模态感知**（Raven）
+21. **应急情况**
 
 ## 关键调优技巧
 
 ### 1. 用 few-shot 例子
 
-PAL 创建时可以附 few-shot 对话：
+PAL 创建时可以附 few-shot 对话（`context` 字段）：
 
-```json
-{
-  "system_prompt": "...",
-  "context": "学生: 我想买苹果。\n老师: 很好！'我要买苹果'。👍 你能告诉我买几个吗？\n学生: 我想买三个苹果。\n老师: 完美！这里要用量词'个'——'三个苹果'。'苹果'是可数名词，所以用'个'。"
-}
+```
+context: |
+  学生: 我想买苹果。
+  老师: 很好！'我要买苹果'。👍 你能告诉我买几个吗？
+  学生: 我想买三个苹果。
+  老师: 完美！这里要用量词'个'——'三个苹果'。'苹果'是可数名词，所以用'个'。
 ```
 
 ### 2. 用 Knowledge Base 喂 HSK 词表
 
 ```bash
 # 上传 HSK 3 词表到 Knowledge Base
-curl -X POST https://tavusapi.com/v2/personas/.../knowledge \
+curl -X POST https://tavusapi.com/v2/personas/$PERSONA_ID/knowledge \
   -F "file=@hsk3-words.pdf"
 ```
 
@@ -189,24 +145,42 @@ RAG 检索 30ms，PAL 调知识库比 LLM 自己记更准。
 }
 ```
 
+### 4. 多模态感知（Raven）
+
+Tavus 的 Raven 模型输出"用户犹豫""用户微笑"等 NL 描述，不是 trigger words。
+
+prompt 应该让 LLM **基于这些描述自然调整**，而不是直接复述给学生看：
+
+```
+# 多模态感知
+- "用户犹豫、眼神飘开" → 放慢节奏、给提示
+- "用户自信、语速快" → 适当加大难度
+- "用户皱眉、坐姿后倾" → 解释更具体、给例子
+- "用户沉默 5 秒以上" → 主动问"需要我换个话题吗？"
+```
+
 ## 迭代策略
 
 ### Week 1-2：用最简单的 prompt
-- 单一 system_prompt
+- 单一 system_prompt（不拆 few-shot）
 - 不调 objective/guardrails
 - 让 LLM 自由发挥
+- 收集 5-10 个真实 transcript 看效果
 
 ### Week 3-4：加 few-shot
 - 收集 3-5 个好的对话样本
 - 加到 PAL context 里
+- 跟 v1 模板对比
 
 ### Week 5+：加 Knowledge Base
-- 把 HSK 3 词表、语法点喂进去
+- 把 HSK 词表、语法点喂进去
 - RAG 检索
+- 验证 lookup_hsk_word 调用次数下降
 
 ### Week 9+：根据 transcript 调
 - 看真实对话的失败模式
 - 加针对性的 guardrail
+- 校对 AC 是否真的达到
 
 ## 常见问题
 
@@ -220,7 +194,6 @@ Tavus 的 system_prompt 上限大概是 8000 tokens（具体看 model）。超�
 ```json
 // 在 PAL 配置加 reminder
 {
-  "system_prompt": "...（原 prompt）...",
   "context": "提醒：任何 HSK 词汇相关问题，必须调 lookup_hsk_word 工具。不要凭记忆。"
 }
 ```
@@ -229,13 +202,27 @@ Tavus 的 system_prompt 上限大概是 8000 tokens（具体看 model）。超�
 
 ### Q: 多个学生怎么办？
 
-Tavus 建议**每个学生一个 PAL**。可以创建一个 PAL 模板然后批量创建个性化版本。
-
-但这不现实——更常见的做法是：
+Tavus 建议**每个学生一个 PAL**。但这不现实——更常见的做法是：
 - 1 个 PAL 模板
 - 通过 `conversational_context` 注入每个学生的画像
 - 通过 `get_student_profile` 工具动态拉
 
----
+### Q: Tavus vs Pi 端谁负责教学决策？
 
-📐 架构 · 🗺️ 路线 → [implementation-roadmap.md](./implementation-roadmap.md) · 🔌 扩展 → [pi-extensions-guide.md](./pi-extensions-guide.md)
+**Pi** 拥有所有学生数据 + 4 画像 + FSRS。
+**Tavus** 拥有实时视频流 + TTS + 多模态感知。
+
+教学法由 PAL 端 LLM 主导（必须实时、自然），但数据决策权在 Pi（HSK 查词、错题、复习都问 Pi）。
+
+## 验证清单
+
+每次改完 prompt 后跑这个：
+
+- [ ] Tavus Playground 跑一次"我想点餐" — 调 lookup_hsk_word 了吗？
+- [ ] 学生说错时调 add_mistake 了吗？
+- [ ] 4 画像占位符替换成真实数据了吗？
+- [ ] 输出的中文都是先中后英格式？
+- [ ] 没用 Markdown 标题/表格/代码块？
+- [ ] 目标学习句每轮 ≤ 1 个？
+- [ ] 5-8 轮后有语言点总结？
+- [ ] 教学时长限制按年龄生效？

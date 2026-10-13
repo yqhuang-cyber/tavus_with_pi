@@ -9,8 +9,10 @@
     "typecheck": "tsc --noEmit",
     "lint": "biome check .",
     "test": "vitest run",
+    "test:watch": "vitest",
     "init-db": "tsx scripts/init-db.ts",
-    "import-hsk": "tsx scripts/import-hsk.ts"
+    "import-hsk": "tsx scripts/import-hsk.ts",
+    "bridge": "tsx -e \"import('./extensions/tavus-bridge.ts')\""
   },
   "keywords": [
     "pi-package",
@@ -23,6 +25,7 @@
   "dependencies": {
     "@mariozechner/pi-coding-agent": "*",
     "better-sqlite3": "^11.5.0",
+    "dayjs": "^1.11.10",
     "ts-fsrs": "^1.0.0",
     "tavus-mcp": "file:./vendor/tavus-mcp"
   },

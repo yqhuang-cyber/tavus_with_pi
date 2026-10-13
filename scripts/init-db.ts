@@ -89,6 +89,7 @@ if (existsSync(studentsDb)) {
     );
 
     -- 4. 会话上下文 (SESSION_CONTEXT)
+    -- T-206: 加 last_raven_signals (JSON) 和 last_raven_at 字段存 Raven 多模态感知
     CREATE TABLE IF NOT EXISTS sessions (
       id TEXT PRIMARY KEY,
       student_id TEXT NOT NULL,
@@ -103,7 +104,8 @@ if (existsSync(studentsDb)) {
       summary TEXT,
       new_mistakes INTEGER DEFAULT 0,
       cards_reviewed INTEGER DEFAULT 0,
-      FOREIGN KEY (student_id) REFERENCES students(id)
+      last_raven_signals TEXT,
+      last_raven_at TIMESTAMP
     );
   `).close()
 }
